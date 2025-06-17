@@ -1,0 +1,28 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Wireless Mouse",
+      "price": 1200,
+      "description": "A smooth and responsive mouse"
+    },
+    {
+      "id": 2,
+      "name": "Mechanical Keyboard",
+      "price": 3500,
+      "description": "Perfect for fast typing"
+    },
+    {
+      "id": 3,
+      "name": "27\" Monitor",
+      "price": 17500,
+      "description": "Crisp 4K Display"
+    },
+    {
+      "id": 4,
+      "name": "Gaming Headset",
+      "price": 2500,
+      "description": "Immersive sound experience"
+    }
+  ]
+}

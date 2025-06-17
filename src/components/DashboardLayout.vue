@@ -13,26 +13,27 @@
 
       <nav class="flex-1 px-4">
         <ul class="space-y-2">
-          <li><a href="#" class="flex items-center p-2 bg-gray-800 rounded">🏠 Dashboard</a></li>
-          <li><a href="#" class="flex items-center p-2 hover:bg-gray-800 rounded">👥 Team</a></li>
-          <li><a href="#" class="flex items-center p-2 hover:bg-gray-800 rounded">📁 Projects</a></li>
-          <li><a href="#" class="flex items-center p-2 hover:bg-gray-800 rounded">📅 Calendar</a></li>
-          <li><a href="#" class="flex items-center p-2 hover:bg-gray-800 rounded">📄 Documents</a></li>
-          <li><a href="#" class="flex items-center p-2 hover:bg-gray-800 rounded">📊 Reports</a></li>
+          <li
+            @click="activeModule = 'tasks'"
+            :class="linkClass('tasks')"
+          >
+            🏠 Task List
+          </li>
+          <li
+            @click="activeModule = 'calendar'"
+            :class="linkClass('calendar')"
+          >
+            📅 Time and Date
+          </li>
+
+          <li @click="activeModule = 'products'" class="cursor-pointer hover:bg-gray-700 px-4 py-2 rounded-md text-gray-300 hover:text-white">
+  🛒 Products
+</li>
+
         </ul>
 
-        <div class="mt-6 text-xs text-gray-400 uppercase">Your Teams</div>
-        <ul class="mt-2 space-y-2">
-          <li><a href="#" class="flex items-center p-2 hover:bg-gray-800 rounded"><span
-                class="mr-3 w-6 h-6 flex items-center justify-center bg-gray-700 rounded-full">H</span>
-              Heroicons</a></li>
-          <li><a href="#" class="flex items-center p-2 hover:bg-gray-800 rounded"><span
-                class="mr-3 w-6 h-6 flex items-center justify-center bg-gray-700 rounded-full">T</span>
-              Tailwind Labs</a></li>
-          <li><a href="#" class="flex items-center p-2 hover:bg-gray-800 rounded"><span
-                class="mr-3 w-6 h-6 flex items-center justify-center bg-gray-700 rounded-full">W</span>
-              Workcation</a></li>
-        </ul>
+        <!-- <div class="mt-6 text-xs text-gray-400 uppercase">Your Teams</div> -->
+
       </nav>
 
       <div class="p-4 mt-auto">
@@ -52,20 +53,55 @@
         <div class="flex items-center space-x-4">
           <button class="text-gray-500 hover:text-gray-700">🔔</button>
           <div class="flex items-center">
-            <img src="https://i.pravatar.cc/32" class="w-8 h-8 rounded-full" />
-            <span class="ml-2 text-sm font-medium text-gray-700">Tom Cook ▾</span>
+            <img src="/public/rafi-01.png" class="w-8 h-8 rounded-full" />
+            <span class="ml-2 text-sm font-medium text-gray-700">K M RAFI ▾</span>
           </div>
         </div>
       </header>
 
-      <!-- Hero Slot -->
+      <!-- Hero Area -->
       <main class="p-6 flex-1 bg-gray-100">
-        <slot />
+        <NoteForm
+          v-if="activeModule === 'tasks'"
+          @add-note="addNote"
+        />
+        <NoteList
+          v-if="activeModule === 'tasks'"
+          :notes="notes"
+          @delete-note="deleteNote"
+        />
+
+        <Calendar v-if="activeModule === 'calendar'" />
+         <ProductList v-if="activeModule === 'products'" />
       </main>
     </div>
   </div>
 </template>
 
 <script setup>
-// No logic needed here right now
+import { ref } from 'vue'
+import NoteForm from './NoteForm.vue'
+import NoteList from './NoteList.vue'
+import Calendar from './Calendar.vue'
+import ProductList from './ProductList.vue'
+
+const activeModule = ref('tasks')
+const notes = ref([])
+
+function addNote(note) {
+  notes.value.push(note)
+}
+
+function deleteNote(index) {
+  notes.value.splice(index, 1)
+}
+
+function linkClass(module) {
+  return [
+    'cursor-pointer px-4 py-2 block rounded transition',
+    activeModule.value === module
+      ? 'bg-gray-800 text-white'
+      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+  ]
+}
 </script>
