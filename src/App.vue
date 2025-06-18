@@ -1,8 +1,9 @@
 <template>
-  <DashboardLayout>
+  <DashboardLayout v-if="auth.isLoggedIn">
     <NoteForm @add-note="addNote" />
     <NoteList :notes="notes" @delete-note="deleteNote" />
   </DashboardLayout>
+  <LoginForm v-else />
 </template>
 
 <script setup>
@@ -10,6 +11,10 @@ import DashboardLayout from './components/DashboardLayout.vue'
 import NoteForm from './components/NoteForm.vue'
 import NoteList from './components/NoteList.vue'
 import { ref, onMounted, watch } from 'vue'
+import { useAuthStore } from './stores/auth'
+import LoginForm from './components/LoginForm.vue'
+
+const auth = useAuthStore()
 
 // 1. reactive notes array
 const notes = ref([])

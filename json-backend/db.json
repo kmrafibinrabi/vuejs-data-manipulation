@@ -1,4 +1,19 @@
 {
+
+    "users": [
+    {
+      "id": 1,
+      "name": "Admin User",
+      "email": "admin@example.com",
+      "password": "password"
+    },
+    {
+      "id": 2,
+      "name": "Rafi",
+      "email": "rafi@example.com",
+      "password": "123456"
+    }
+  ],
   "products": [
     {
       "id": 1,
