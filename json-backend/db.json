@@ -1,40 +1,45 @@
 {
-
-    "users": [
+  "users": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Admin User",
       "email": "admin@example.com",
       "password": "password"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Rafi",
       "email": "rafi@example.com",
       "password": "123456"
+    },
+    {
+      "id": "d304",
+      "name": "test",
+      "email": "test@gmail.com",
+      "password": "11111"
     }
   ],
   "products": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Wireless Mouse",
       "price": 1200,
       "description": "A smooth and responsive mouse"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Mechanical Keyboard",
       "price": 3500,
       "description": "Perfect for fast typing"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "27\" Monitor",
       "price": 17500,
       "description": "Crisp 4K Display"
     },
     {
-      "id": 4,
+      "id": "4",
       "name": "Gaming Headset",
       "price": 2500,
       "description": "Immersive sound experience"

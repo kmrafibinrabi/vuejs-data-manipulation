@@ -1,9 +1,18 @@
 <template>
+
+  <LoginForm
+    v-if="!auth.isLoggedIn && showForm === 'login'"
+    @switch-to-register="showForm = 'register'"
+  />
+  <RegisterForm
+    v-if="!auth.isLoggedIn && showForm === 'register'"
+    @switch-to-login="showForm = 'login'"
+  />
   <DashboardLayout v-if="auth.isLoggedIn">
     <NoteForm @add-note="addNote" />
     <NoteList :notes="notes" @delete-note="deleteNote" />
   </DashboardLayout>
-  <LoginForm v-else />
+  <!-- <LoginForm v-else /> -->
 </template>
 
 <script setup>
@@ -13,8 +22,10 @@ import NoteList from './components/NoteList.vue'
 import { ref, onMounted, watch } from 'vue'
 import { useAuthStore } from './stores/auth'
 import LoginForm from './components/LoginForm.vue'
+import RegisterForm from './components/RegisterForm.vue'
 
 const auth = useAuthStore()
+const showForm = ref('login')
 
 // 1. reactive notes array
 const notes = ref([])
