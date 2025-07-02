@@ -20,6 +20,24 @@
     <div v-if="result" class="mt-6 p-4 bg-gray-100 border rounded">
       <h3 class="font-semibold text-gray-700 mb-2">100% Determined Outcome:</h3>
       <p class="text-gray-800 whitespace-pre-line">{{ result }}</p>
+
+      <!-- Action buttons -->
+      <div class="mt-4 flex gap-3">
+        <button
+          @click="generateOutcome"
+          :disabled="loading"
+          class="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600"
+        >
+          {{ loading ? 'Regenerating...' : 'Regenerate' }}
+        </button>
+
+        <button
+          @click="clearFields"
+          class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+        >
+          Clear
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -61,11 +79,7 @@ const generateOutcome = async () => {
       }
     })
 
-    console.log('Full API response:', response.data)
-
     const candidate = response.data.candidates?.[0]
-
-    console.log('Candidate content:', candidate?.content)
 
     let outputText = ''
 
@@ -75,7 +89,6 @@ const generateOutcome = async () => {
       Array.isArray(candidate.content.parts) &&
       candidate.content.parts.length > 0
     ) {
-      // Join all parts' text (usually just one part)
       outputText = candidate.content.parts.map(p => p.text).join(' ')
     }
 
@@ -92,7 +105,10 @@ const generateOutcome = async () => {
     loading.value = false
   }
 }
+
+const clearFields = () => {
+  idea.value = ''
+  result.value = ''
+  loading.value = false
+}
 </script>
-
-
-
