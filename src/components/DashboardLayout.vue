@@ -14,6 +14,13 @@
           <li @click="activeModule = 'tasks'" :class="linkClass('tasks')">🏠 Task List</li>
           <li @click="activeModule = 'calendar'" :class="linkClass('calendar')">📅 Time and Date</li>
           <li @click="activeModule = 'products'" :class="linkClass('products')">🛒 Products</li>
+          <li
+  @click="activeModule = 'ideas'"
+  :class="linkClass('ideas')"
+>
+  🧠 Future Ideas
+</li>
+
         </ul>
       </nav>
 
@@ -46,6 +53,8 @@
         <NoteList v-if="activeModule === 'tasks'" :notes="notes" @delete-note="deleteNote" />
         <Calendar v-if="activeModule === 'calendar'" />
         <ProductList v-if="activeModule === 'products'" />
+        <FutureIdeas v-if="activeModule === 'ideas'" />
+        
       </main>
     </div>
   </div>
@@ -58,6 +67,7 @@ import NoteList from './NoteList.vue'
 import Calendar from './Calendar.vue'
 import ProductList from './ProductList.vue'
 import { useAuthStore } from '../stores/auth'
+import FutureIdeas from './FutureIdeas.vue'
 
 const auth = useAuthStore()
 const activeModule = ref('tasks')
