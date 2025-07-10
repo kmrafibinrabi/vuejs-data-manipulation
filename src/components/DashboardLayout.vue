@@ -21,6 +21,11 @@
   🧠 Future Ideas
 </li>
 
+<li @click="activeModule = 'imageResearch'" :class="linkClass('imageResearch')">
+  🖼️ Image Research
+</li>
+
+
         </ul>
       </nav>
 
@@ -54,6 +59,7 @@
         <Calendar v-if="activeModule === 'calendar'" />
         <ProductList v-if="activeModule === 'products'" />
         <FutureIdeas v-if="activeModule === 'ideas'" />
+        <ImageResearch v-if="activeModule === 'imageResearch'" />
         
       </main>
     </div>
@@ -68,6 +74,7 @@ import Calendar from './Calendar.vue'
 import ProductList from './ProductList.vue'
 import { useAuthStore } from '../stores/auth'
 import FutureIdeas from './FutureIdeas.vue'
+import ImageResearch from './ImageResearch.vue'
 
 const auth = useAuthStore()
 const activeModule = ref('tasks')
