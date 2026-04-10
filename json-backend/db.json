@@ -17,6 +17,12 @@
       "name": "test",
       "email": "test@gmail.com",
       "password": "11111"
+    },
+    {
+      "name": "redoy",
+      "email": "kmrafibinrabi97@gmail.com",
+      "password": "54321",
+      "id": "84adIo-HyD8"
     }
   ],
   "products": [
@@ -44,5 +50,6 @@
       "price": 2500,
       "description": "Immersive sound experience"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
