@@ -1,9 +1,33 @@
 <template>
   <div class="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
-    <h2 class="text-xl font-bold mb-4">Login</h2>
+    <h2 class="text-xl font-bold mb-4 text-center">NexAdmin!</h2>
     <form @submit.prevent="handleLogin">
-      <input v-model="username" placeholder="Username" class="input mb-2" />
-      <input v-model="password" type="password" placeholder="Password" class="input mb-4" />
+      <input
+        v-model="username"
+        placeholder="Username"
+        class="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-150 text-gray-700 bg-gray-50"
+        autocomplete="username"
+      />
+      <div class="relative mb-4">
+        <input
+          v-model="password"
+          :type="showPassword ? 'text' : 'password'"
+          placeholder="Password"
+          class="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-150 text-gray-700 bg-gray-50"
+        />
+        <span
+          class="absolute right-3 top-1/3 transform -translate-y-1/2 cursor-pointer select-none"
+          @click="togglePassword"
+        >
+          <svg v-if="showPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5 text-gray-500">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5 text-gray-500">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.293-3.95m3.249-2.568A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.965 9.965 0 01-4.293 5.03M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 6L6 6" />
+          </svg>
+        </span>
+      </div>
       <p v-if="error" class="text-red-500 text-sm mt-2">{{ error }}</p>
       <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Login</button>
       <p class="text-sm mt-4">
@@ -64,6 +88,11 @@ const auth = useAuthStore()
 const username = ref('')
 const password = ref('')
 const error = ref('')
+const showPassword = ref(false)
+
+const togglePassword = () => {
+  showPassword.value = !showPassword.value
+}
 
 const handleLogin = async () => {
   error.value = ''
