@@ -51,8 +51,7 @@ const result = ref('')
 const loading = ref(false)
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY
-const ENDPOINT =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
+const ENDPOINT = 'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent'
 
 const generateOutcome = async () => {
   if (!idea.value.trim()) return
