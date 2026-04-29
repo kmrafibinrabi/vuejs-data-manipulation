@@ -30,7 +30,7 @@
         </label>
       </div>
 
-      <!-- Image preview (optional - shows after upload) -->
+      <!-- Image preview -->
       <div v-if="imagePreview" class="relative border rounded-lg overflow-hidden bg-gray-50">
         <img :src="imagePreview" alt="Preview" class="w-full h-40 object-contain" />
         <button
@@ -55,14 +55,14 @@
 
       <button
         type="submit"
-        :disabled="loading || !imageFile || !question"
+        :disabled="loading || !imageFile || !question.trim()"
         class="w-full bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {{ loading ? 'Analyzing...' : 'Ask AI' }}
       </button>
     </form>
 
-    <!-- Landscape frame for result -->
+    <!-- Result section -->
     <div v-if="result" class="mt-6">
       <h3 class="font-semibold text-gray-700 mb-2">🧠 AI Feedback:</h3>
       <div class="bg-gray-100 border rounded-lg overflow-hidden">
@@ -73,6 +73,11 @@
         </div>
       </div>
     </div>
+
+    
+    <!-- <div v-if="debug" class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-xs">
+      <strong>Debug:</strong> Question: "{{ question }}" | Has file: {{ !!imageFile }}
+    </div> -->
   </div>
 </template>
 
@@ -82,15 +87,16 @@ import axios from 'axios'
 
 const imageFile = ref(null)
 const imagePreview = ref(null)
-const question = ref('')
+const question = ref('what is this')  // ← Set default value
 const result = ref('')
 const loading = ref(false)
+  // Set to false in production
 
 const handleFile = (e) => {
   const file = e.target.files[0]
   if (file) {
+    console.log('File selected:', file.name, file.type, file.size)
     imageFile.value = file
-    // Create preview URL
     if (imagePreview.value) {
       URL.revokeObjectURL(imagePreview.value)
     }
@@ -104,27 +110,71 @@ const removeImage = () => {
   }
   imageFile.value = null
   imagePreview.value = null
-  // Clear the file input
   const fileInput = document.getElementById('imageUpload')
   if (fileInput) fileInput.value = ''
+  // Reset question if needed
+  // question.value = ''
 }
 
 const handleSubmit = async () => {
-  if (!imageFile.value || !question.value) return
+  // Trim question to avoid empty strings with spaces
+  const trimmedQuestion = question.value.trim()
+  
+  if (!imageFile.value) {
+    console.log('No file selected')
+    result.value = 'Please select an image first.'
+    return
+  }
+  
+  if (!trimmedQuestion) {
+    console.log('No question entered')
+    result.value = 'Please enter a question about the image.'
+    return
+  }
 
   loading.value = true
   result.value = ''
 
   const formData = new FormData()
-  formData.append('image', imageFile.value)
-  formData.append('question', question.value)
+  formData.append('image', imageFile.value, imageFile.value.name)
+  formData.append('question', trimmedQuestion)  // Use trimmed question
 
   try {
-    const res = await axios.post('http://127.0.0.1:8000/api/image-research', formData)
-    result.value = res.data.answer
+    console.log('Sending file:', imageFile.value.name)
+    console.log('Question:', trimmedQuestion)
+    
+    // Log FormData contents for debugging
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+    
+    const res = await axios.post('/api/image-research', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    
+    console.log('Response:', res.data)
+    
+    if (res.data.success) {
+      result.value = res.data.answer
+    } else {
+      result.value = '❌ Failed to analyze image: ' + (res.data.message || 'Unknown error')
+    }
   } catch (err) {
-    console.error(err)
-    result.value = '❌ Something went wrong.'
+    console.error('Error details:', err.response?.data || err.message)
+    
+    // Better error message
+    if (err.response?.data?.errors) {
+      const errors = err.response.data.errors
+      result.value = '❌ Validation error: ' + JSON.stringify(errors)
+    } else if (err.response?.data?.error) {
+      result.value = '❌ Error: ' + err.response.data.error
+    } else if (err.response?.data?.message) {
+      result.value = '❌ Error: ' + err.response.data.message
+    } else {
+      result.value = '❌ Something went wrong. Please try again.'
+    }
   } finally {
     loading.value = false
   }
@@ -132,7 +182,6 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-/* Landscape optimization */
 .prose {
   max-width: 100%;
 }
@@ -142,7 +191,6 @@ const handleSubmit = async () => {
   margin-bottom: 0;
 }
 
-/* Custom scrollbar for better UX */
 .overflow-y-auto::-webkit-scrollbar {
   width: 8px;
 }

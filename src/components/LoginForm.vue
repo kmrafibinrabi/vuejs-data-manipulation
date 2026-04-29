@@ -3,10 +3,11 @@
     <h2 class="text-xl font-bold mb-4 text-center">NexAdmin!</h2>
     <form @submit.prevent="handleLogin">
       <input
-        v-model="username"
-        placeholder="Username"
+        v-model="email"
+        type="email"
+        placeholder="Email"
         class="w-full px-4 py-2 mb-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-150 text-gray-700 bg-gray-50"
-        autocomplete="username"
+        autocomplete="email"
       />
       <div class="relative mb-4">
         <input
@@ -85,7 +86,7 @@ import { ref } from 'vue'
 import { useAuthStore } from '../stores/auth'
 
 const auth = useAuthStore()
-const username = ref('')
+const email = ref('')
 const password = ref('')
 const error = ref('')
 const showPassword = ref(false)
@@ -97,8 +98,8 @@ const togglePassword = () => {
 const handleLogin = async () => {
   error.value = ''
 
-  if (!username.value) {
-    error.value = 'Username is required'
+  if (!email.value) {
+    error.value = 'Email is required'
     return
   }
 
@@ -107,10 +108,10 @@ const handleLogin = async () => {
     return
   }
 
-  const success = await auth.login(username.value, password.value)
+  const success = await auth.login(email.value, password.value)
 
   if (!success) {
-    error.value = 'Invalid credentials'
+    error.value = 'Invalid email or password'
   }
 }
 </script>

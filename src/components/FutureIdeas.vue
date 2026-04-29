@@ -58,52 +58,17 @@ const idea = ref('')
 const result = ref('')
 const loading = ref(false)
 
-const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY
-const ENDPOINT = 'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent'
-
 const generateOutcome = async () => {
   if (!idea.value.trim()) return
   result.value = ''
   loading.value = true
 
   try {
-    const payload = {
-      contents: [
-        {
-          parts: [
-            {
-              text: `You are a future-predicting assistant. For the idea: "${idea.value}", respond with a single confident and deterministic future outcome. Never give multiple options.`
-            }
-          ]
-        }
-      ]
-    }
-
-    const response = await axios.post(
-      `${ENDPOINT}?key=${API_KEY}`,
-      payload,
-      { headers: { 'Content-Type': 'application/json' } }
-    )
-
-    const candidate = response.data.candidates?.[0]
-
-    let outputText = ''
-
-    if (
-      candidate &&
-      candidate.content &&
-      Array.isArray(candidate.content.parts) &&
-      candidate.content.parts.length > 0
-    ) {
-      outputText = candidate.content.parts.map(p => p.text).join(' ')
-    }
-
-    if (outputText) {
-      result.value = outputText.trim()
-    } else {
-      result.value = 'No prediction received.'
-      console.warn('Could not extract text from candidate content parts:', candidate?.content)
-    }
+    const response = await axios.post('/api/future-ideas/generate', {
+  idea: idea.value
+})
+    
+    result.value = response.data.result || 'No prediction received.'
   } catch (err) {
     console.error(err)
     result.value = '❌ Something went wrong while generating the prediction.'

@@ -19,8 +19,9 @@
 
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
+import { useAuthStore } from '../stores/auth'
 
+const auth = useAuthStore()
 const name = ref('')
 const email = ref('')
 const password = ref('')
@@ -34,24 +35,14 @@ const handleRegister = async () => {
   }
 
   try {
-    // Check if user already exists
-    const res = await axios.get(`http://localhost:3000/users?email=${email.value}`)
-    if (res.data.length > 0) {
-      error.value = 'Email already exists'
-      return
-    }
-
-    // Register new user
-    await axios.post('http://localhost:3000/users', {
-      name: name.value,
-      email: email.value,
-      password: password.value
-    })
-
-    // Redirect to login
+    await auth.register(name.value, email.value, password.value)
+    // Registration successful, switch to login
     emit('switch-to-login')
   } catch (err) {
-    error.value = 'Something went wrong!'
+    const errorMessage = err.response?.data?.message || 
+                        err.response?.data?.errors?.email?.[0] || 
+                        'Something went wrong!'
+    error.value = errorMessage
   }
 }
 

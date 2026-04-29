@@ -2,24 +2,27 @@
 import { ref } from 'vue';
 
 const title = ref('');
-const description = ref('');
+const content = ref('');
+const category = ref('');
 
 const emit = defineEmits(['add-note']);
 
 function handlesubmit(){
-    if (title.value.trim() === '' || description.value.trim() === '') {
-        alert('Please fill in both fields.');
+    if (title.value.trim() === '' || content.value.trim() === '') {
+        alert('Please fill in both title and content.');
         return;
-        
     }
 
     emit('add-note', {
         title: title.value,
-        description: description.value
+        content: content.value,
+        category: category.value || null,
+        color: '#FFD700'
     });
 
     title.value = ''
-  description.value = ''
+    content.value = ''
+    category.value = ''
 }
 </script>
 
@@ -37,12 +40,21 @@ function handlesubmit(){
                 />
             </div>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Content</label>
                 <textarea
-                    v-model="description"
+                    v-model="content"
                     placeholder="Write your note here"
                     class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                 ></textarea>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <input
+                    v-model="category"
+                    type="text"
+                    placeholder="Optional category"
+                    class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
             </div>
             <button
                 type="submit"
